@@ -1,0 +1,10 @@
+# dockerfile criteria : 
+# use sonarqube version 9.1 as base image 
+# copy released plugin into /plugins 
+# enable ssh and set default user and password 
+# expose the desired port (take on consideration  that ports need to be added to service and ingress )
+FROM sonarqube:9.1-community
+# setup ssh 
+RUN apk add openssh openrc --no-cache && echo "root:root" | chpasswd && echo "PermitRootLogin Yes " >> /etc/ssh/sshd_config && rc-status 
+CMD $(/etc/init.d/sshd start || true ) && touch /run/openrc/softlevel && /etc/init.d/sshd start && tail -F /dev/null 
+

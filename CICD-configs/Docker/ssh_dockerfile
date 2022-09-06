@@ -1,0 +1,6 @@
+# since sonarqube docker is based on alpine 
+# we need to test the activation of sshd service on alpine image 
+# when confirmed we need to add content to Gloabl_Dockerfile
+FROM alpine:latest 
+RUN apk add openssh openrc --no-cache && echo "root:root" | chpasswd && echo "PermitRootLogin Yes " >> /etc/ssh/sshd_config && rc-status 
+CMD $(/etc/init.d/sshd start || true ) && touch /run/openrc/softlevel && /etc/init.d/sshd start && tail -F /dev/null 
