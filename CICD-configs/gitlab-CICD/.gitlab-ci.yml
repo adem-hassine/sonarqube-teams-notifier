@@ -1,0 +1,56 @@
+
+# initial gitlab ci definition
+# stage description : 
+    # build : package the plugin  jar 
+    # dockerize : a one time job for sonarqube:debuger 
+    # deploy : a one time job deploy sonarqube in k8s 
+    # update : stop current sonarqube instance , update plugin jar in /extensions/plugin , restart the server , all commands are injected via ssh connection 
+    # debug : this job will be trigered by api in order (via ssh connection ) stop server , enable the debug , restart  sever , notify developer  via teams webhook that server is waiting for connection 
+
+# pipeline flow : 
+    # create a tag  for plugin  version  example version-1.1.1 this will trigger : *
+         # package job 
+         # update  job 
+    # create tag named restart-infra (this will delete all the k8s deployment and restart again ) this will trigger : 
+        # dockerize : build sonarqube:debug 
+        # deploy :  delete current pod and restart 
+        # automator :  ( selenium or karate script ) to automate setup of sonarqube instance an auth token will be updated in the repo itself and sent in team channel 
+        #  
+
+
+
+
+variables:
+    # those variables are displayed intensionally in order to facilitate  dev cycle  
+    TEAMS_WEBHOOK: https://proxymit126.webhook.office.com/webhookb2/f372b69a-6607-4922-9253-28e9ab1f9dea@3c0c5aae-60f8-4fc1-965d-f09d9880dc8f/IncomingWebhook/47398f7c509e4f61b2950f7de7173ff7/794ed66e-5255-4e5d-9aea-9ade175ea009
+    SSH_PASS: root 
+    PLUGIN_DIR: $CI_PROJECT_DIR/plugin_src/
+
+
+stages: 
+    - build 
+    - dockerize 
+    - deploy 
+    - automator 
+    - update 
+    - debug 
+
+
+# package plugin job 
+
+package_plugin: 
+    image: gitlab-registry.proxym-group.net/docker/maven:3.6.3-jdk-11
+    stage : build 
+    tags: 
+        - docker 
+    before_script: 
+        - echo "packagin teams notifier jar" 
+    script: 
+        - mvn clean package
+    artifacts: 
+        paths:
+            - add/plugin/jar/path
+    if: 
+        - we specify tags 
+
+
