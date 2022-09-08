@@ -12,14 +12,14 @@ import org.sonarqube.ws.client.HttpConnector;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-public class RequestSender {
+public class SonarRequestSender {
   private static final ObjectMapper objectMapper = new ObjectMapper();
-  private RequestSender(){}
+  private SonarRequestSender(){}
   static {
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-  private static final Logger LOG = Loggers.get(RequestSender.class);
+  private static final Logger LOG = Loggers.get(SonarRequestSender.class);
   public static MeasuresContainer get(String baseUrl, String url, String token) {
     HttpConnector.Builder builder = HttpConnector.newBuilder();
     HttpConnector httpConnector= builder.userAgent("teams-notifier")

@@ -157,7 +157,7 @@ class PayloadBuilder {
   private void appendConditions(Payload message) {
     Section section = message.getSections().get(0);
     section.setFacts(new ArrayList<>());
-    MeasuresContainer measuresContainer =  RequestSender.get(baseUrl, EndpointProvider.measuresDetails(analysis.getProject().getKey()),token);
+    MeasuresContainer measuresContainer =  SonarRequestSender.get(baseUrl, EndpointProvider.measuresDetails(analysis.getProject().getKey()),token);
     for (Measure measure : measuresContainer.getMeasures()) {
       Fact fact = new Fact();
       fact.setName(measure.getMetric());
