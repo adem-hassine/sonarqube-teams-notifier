@@ -29,14 +29,14 @@ class TeamsHttpClient {
   private static final Logger LOG = Loggers.get(TeamsHttpClient.class);
 
   /**
+   * String value indicating a setting is not set.
+   */
+  private static final String NOT_SET = "NOT_SET";
+
+  /**
    * The URL for the webhook.
    */
   private URL hook;
-
-  /**
-   * The port to be used for the connection.
-   */
-  private int port;
 
   /**
    * The full path of the URL including query string and anchor reference.
@@ -53,6 +53,10 @@ class TeamsHttpClient {
    */
   private CloseableHttpClient httpClient;
 
+  /**
+   * Whether or not to bypass HTTPS validation.
+   */
+  private boolean bypassHttpsValidation = false;
 
   /**
    * The target host of the webhook.
@@ -95,7 +99,7 @@ class TeamsHttpClient {
    * @throws UnsupportedEncodingException If the payload is malformed.
    */
   TeamsHttpClient build() throws UnsupportedEncodingException, JsonProcessingException {
-    port = getPort();
+    int port = getPort();
     path = getPath();
     httpClient = getHttpClient();
     target = new HttpHost(hook.getHost(), port, hook.getProtocol());
@@ -106,6 +110,7 @@ class TeamsHttpClient {
         + " | Host: " + hook.getHost()
         + " | Port: " + port
         + " | Path: " + path
+        + " | Bypass HTTPS Validation: " + bypassHttpsValidation
     );
     return this;
   }
