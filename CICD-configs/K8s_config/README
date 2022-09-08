@@ -1,0 +1,8 @@
+(draft)
+This directory contains k8s resources in order to deploy sonarqube image 
+initial test will be manual 
+* deployment 
+* service 
+* ingress 
+
+to refresh docker image in the pod , kill existing pod so we have new pod with new docker image 
