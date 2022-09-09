@@ -42,12 +42,12 @@ package_sonar_plugin:
         - mvn clean package
     artifacts:
         paths:
-          - $CI_PROJECT_DIR/plugin_src/dir 
+          - $CI_PROJECT_DIR/plugin_src/
         expire_in: 1h 
 #    rules:
 #       - if: '$CI_COMMIT_TAG =~ /^release-\d+\.\d+\.\d+$/'
     only: 
-        - disabled 
+        - develop
 
 
 
