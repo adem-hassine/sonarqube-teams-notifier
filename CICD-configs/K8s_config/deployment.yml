@@ -23,5 +23,6 @@ spec:
         - containerPort: 9092
         - containerPort: 8080
         - containerPort: 22
+        - containerPort: 8000
       imagePullSecrets:
         - name: gitlab-auth

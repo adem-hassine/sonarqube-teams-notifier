@@ -1,3 +1,4 @@
+# initial POC for SonarQube Sandbox 
 # initial gitlab ci configuration 
 # content is extended from ./gitlab-cicd 
 
@@ -10,7 +11,7 @@ stages:
     - dockerise 
     - build 
     - integrate 
-    - startserver
+    - debug
 
 
 # work on tag dockerise
@@ -80,3 +81,26 @@ update_sonarqube:
         # restart the server 
     rules:
        - if: '$CI_COMMIT_TAG =~ /^release-\d+\.\d+\.\d+$/'
+
+
+# initial definition of live debug job 
+launch_live_debug:
+    stage: debug
+    tags:
+      - docker 
+    # this image will be changed to dedicated job image
+    image: alpine:latest 
+    before_script:
+        # setting ssh
+        - apk add --no-cache openssh-client sshpass
+    script: 
+        # shutdown server 
+        - sshpass -p 'root' ssh  -o StrictHostKeyChecking=no root@172.16.110.36 ' bash /root/shutdown-server.sh '
+        # edit sonar.properties to modify live debug on port 8080
+        - sshpass -p 'root' ssh  -o StrictHostKeyChecking=no root@172.16.110.36 ' bash /home/sonarqube/enable-live-debug.sh '
+        # start server 
+        - sshpass -p 'sonar' ssh sonarqube@172.16.110.36 'cd /home/sonarqube/ && . ./start-server.sh'
+        # notify developer that server is waiting for ide link 
+        # to be added in next milestone 
+    rules:
+       - if: '$CI_COMMIT_TAG =~ /live-debug/'
