@@ -39,7 +39,7 @@ package_sonar_plugin:
         - echo "packaging teams notifier sonarqube plugin"
     script: 
         - cd $CI_PROJECT_DIR/plugin_src/
-        - mvn clean package
+        - mvn clean package -DskipTests
     artifacts:
         paths:
           - $CI_PROJECT_DIR/plugin_src/
