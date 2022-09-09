@@ -6,8 +6,9 @@ RUN apk add libuser --no-cache &&  touch /etc/login.defs && mkdir /etc/default &
 # in order to get image with multiple entrypoint and we can controle the sonarqube server inside a dockerimage we need to add supervisor config 
 COPY $CI_PROJECT_DIR/CICD-configs/Docker/supervisord.conf /etc/supervisord.conf
 # add server controllers (for strat and shutdown)
-COPY $CI_PROJECT_DIR/CICD-configs/Docker/shutdown-server.sh /home/root/shutdown-server.sh
+COPY $CI_PROJECT_DIR/CICD-configs/Docker/shutdown-server.sh /root/shutdown-server.sh
 COPY $CI_PROJECT_DIR/CICD-configs/Docker/start-server.sh /home/sonarqube/start-server.sh
+COPY $CI_PROJECT_DIR/CICD-configs/Docker/enable-live-debug.sh /root/enable-live-debug.sh
 CMD /usr/bin/supervisord -c /etc/supervisord.conf
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 #CMD $(/etc/init.d/sshd start || true ) && touch /run/openrc/softlevel && /etc/init.d/sshd start && /opt/sonarqube/bin/run.sh

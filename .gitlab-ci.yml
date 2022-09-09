@@ -42,12 +42,11 @@ package_sonar_plugin:
         - mvn clean package -DskipTests
     artifacts:
         paths:
-          - $CI_PROJECT_DIR/plugin_src/
+          - $CI_PROJECT_DIR/plugin_src/target/sonar-teams-notifier-1.3.3.jar
         expire_in: 1h 
-#    rules:
-#       - if: '$CI_COMMIT_TAG =~ /^release-\d+\.\d+\.\d+$/'
-    only: 
-        - develop
+    rules:
+       - if: '$CI_COMMIT_TAG =~ /^release-\d+\.\d+\.\d+$/'
+
 
 
 
@@ -55,25 +54,29 @@ package_sonar_plugin:
 #  k8s container is reached since we are using service typeof LoadBalancer 
 
 update_sonarqube: 
+    variables:
+        GIT_STRATEGY: none
+        NEW_PLUGIN_FULL_PATH: $CI_PROJECT_DIR/plugin_src/target/sonar-teams-notifier-1.3.3.jar
     stage: integrate 
     tags:
       - docker 
     # this will be chnaged  by specific ssh docker image 
     image: alpine:latest 
+    needs:
+        - job: package_sonar_plugin
+          artifacts: true
     before_script:
         # setting ssh 
         - apk add --no-cache openssh-client sshpass
     script:
-        # clean plugins and shutdown sonarqube server 
-        - sshpass -p 'root' ssh  -o StrictHostKeyChecking=no root@172.16.110.36 ' bash /root/shutdown-server.sh && rm -rf /opt/sonarqube/extensions/*.jar'
+        # running shutdown server script 
+        # please read the shutdow-server script in order to get the full goal of the script 
+        - sshpass -p 'root' ssh  -o StrictHostKeyChecking=no root@172.16.110.36 ' bash /root/shutdown-server.sh '
         # get jar and copy it 
-        - sshpass -p 'root' scp ${PLUGIN_JAR_PATH} root@172.16.110.36:/opt/sonarqube/extensions/plugins/teams_notifier.jar
+        - sshpass -p 'root' scp ${NEW_PLUGIN_FULL_PATH} root@172.16.110.36:/opt/sonarqube/extensions/plugins/teams_notifier.jar
         # restart the sonarqube server 
-        - sshpass -p 'sonar' ssh sonarqube@172.16.110.36 'cd /home/sonarqube/ && . ./run.sh'
+        - sshpass -p 'sonar' ssh sonarqube@172.16.110.36 'cd /home/sonarqube/ && . ./start-server.sh'
         # add post to teams plugin in order to inform about server status 
         # restart the server 
-    only:
-        - disabled
-
-
-
+    rules:
+       - if: '$CI_COMMIT_TAG =~ /^release-\d+\.\d+\.\d+$/'
