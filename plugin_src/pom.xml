@@ -64,7 +64,6 @@
       <artifactId>httpclient</artifactId>
       <version>4.5.13</version>
     </dependency>
-
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -93,32 +92,6 @@
 
   <build>
     <plugins>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <doclet>nl.talsmasoftware.umldoclet.UMLDoclet</doclet>
-              <docletArtifact>
-                <groupId>nl.talsmasoftware</groupId>
-                <artifactId>umldoclet</artifactId>
-                <version>1.1.4</version>
-              </docletArtifact>
-              <additionalOptions>
-                <additionalOption>-umlImageFormat SVG</additionalOption>
-              </additionalOptions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -212,6 +185,40 @@
           <pluginOrganizationName>Proxym Group</pluginOrganizationName>
           <pluginOrganizationUrl>https://www.proxym-group.com/</pluginOrganizationUrl>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.11.3</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <id>install node and yarn</id>
+            <goals>
+              <goal>install-node-and-yarn</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v14.16.1</nodeVersion>
+              <yarnVersion>v1.22.10</yarnVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>yarn install</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+          </execution>
+          <execution>
+            <phase>generate-resources</phase>
+            <id>yarn run script</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>build</arguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

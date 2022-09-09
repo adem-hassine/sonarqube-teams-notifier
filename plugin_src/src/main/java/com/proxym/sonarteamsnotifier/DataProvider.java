@@ -24,7 +24,7 @@ public class DataProvider {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
   }
-  public String getProperty(String name){
+  public static String getProperty(String name){
     return applicationProperties.getProperty(name);
   }
 }

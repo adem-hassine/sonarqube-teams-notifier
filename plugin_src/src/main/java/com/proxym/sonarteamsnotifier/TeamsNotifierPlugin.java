@@ -7,6 +7,7 @@ import com.proxym.sonarteamsnotifier.extension.TeamsSensor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.proxym.sonarteamsnotifier.web.TeamsNotifierPageDefinition;
 import org.sonar.api.Plugin;
 import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
@@ -24,7 +25,7 @@ public class TeamsNotifierPlugin implements Plugin {
     List<Object> extensions = pluginPropertyDefinitions();
     extensions.add(TeamsSensor.class);
     extensions.add(TeamsPostProjectAnalysisTask.class);
-
+    extensions.add(TeamsNotifierPageDefinition.class);
     context.addExtensions(extensions);
   }
 

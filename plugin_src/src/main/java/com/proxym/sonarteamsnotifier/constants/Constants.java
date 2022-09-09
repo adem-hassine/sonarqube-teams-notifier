@@ -31,6 +31,8 @@ public class Constants {
     public static final String TOKEN = "sonar.login";
     public static final String PROJECT_ID = "sonar.analysis.projectId";
     public static final String SERVER_URL = "sonar.host.url";
+    public static final String HOME_PAGE_URL="homepage.url";
+    public static final String HOME_PAGE_NAME="homepage.name";
 
 
     private Constants() {
