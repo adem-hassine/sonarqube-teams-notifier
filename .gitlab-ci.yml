@@ -116,5 +116,6 @@ gitlab_debug:
         - echo "getting env variables "
     script:
         - echo $CI_PIPELINE_SOURCE	
+        - echo $CI_COMMIT_AUTHOR
     only:
         - develop
