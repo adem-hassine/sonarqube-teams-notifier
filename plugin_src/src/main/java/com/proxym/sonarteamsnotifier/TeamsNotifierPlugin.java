@@ -37,7 +37,7 @@ public class TeamsNotifierPlugin implements Plugin {
     private List<Object> pluginPropertyDefinitions() {
         List<Object> extensions = new ArrayList<>();
         extensions.add(getProperty(Constants.ENABLED, "Enabled",
-                "Is Teams Notifier plugin enabled ?", "false", PropertyType.BOOLEAN));
+                "Is Teams Notifier plugin enabled ?", "true", PropertyType.BOOLEAN));
         extensions.add(getProperty(Constants.SHOW_AUTHOR, "Show Author",
                 "Post author name with notification",
                 "false", PropertyType.BOOLEAN));
