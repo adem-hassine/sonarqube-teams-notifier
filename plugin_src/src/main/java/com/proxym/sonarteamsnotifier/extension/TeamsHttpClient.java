@@ -2,9 +2,9 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import com.proxym.sonarteamsnotifier.exceptions.HttpClientException;
 import com.proxym.sonarteamsnotifier.exceptions.InvalidHttpResponseException;
+import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
 import com.proxym.sonarteamsnotifier.webhook.Payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -146,9 +146,8 @@ class TeamsHttpClient {
    * @throws UnsupportedEncodingException If the payload is malformed.
    */
   private HttpPost getHttpPost() throws UnsupportedEncodingException, JsonProcessingException {
-    ObjectMapper objectMapper = new ObjectMapper();
     HttpPost tempHttpPost = new HttpPost(path);
-    tempHttpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(payload)));
+    tempHttpPost.setEntity(new StringEntity(ObjectMapperConfigurer.objectMapper.writeValueAsString(payload)));
     tempHttpPost.setHeader("Accept", "application/json");
     tempHttpPost.setHeader("Content-type", "application/json");
     return tempHttpPost;
