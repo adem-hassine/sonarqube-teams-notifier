@@ -11,7 +11,6 @@ public class DataProvider {
   protected static final String APPLICATION_PROPERTIES = "application.properties";
   protected static Properties applicationProperties = new Properties();
   protected static final Logger LOGGER = Logger.getLogger(DataProvider.class.getCanonicalName());
-
   static {
     final ClassLoader classLoader = DataProvider.class.getClassLoader();
 
