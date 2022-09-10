@@ -117,5 +117,6 @@ gitlab_debug:
     script:
         - echo $CI_PIPELINE_SOURCE	
         - echo $CI_COMMIT_AUTHOR
+        - echo $CI_COMMIT_AUTHOR > content ; cat content
     only:
         - develop
