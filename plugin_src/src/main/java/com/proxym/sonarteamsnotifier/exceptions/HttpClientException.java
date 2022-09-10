@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin.exceptions;
+package com.proxym.sonarteamsnotifier.exceptions;
 
 public class HttpClientException extends RuntimeException{
   public HttpClientException(String message){

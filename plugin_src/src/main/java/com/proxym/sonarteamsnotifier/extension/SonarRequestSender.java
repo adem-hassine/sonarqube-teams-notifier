@@ -1,7 +1,7 @@
-package com.proxym.sonarteamsnotifier.plugin.extension;
+package com.proxym.sonarteamsnotifier.extension;
 
-import com.proxym.sonarteamsnotifier.plugin.exceptions.InvalidHttpResponseException;
-import com.proxym.sonarteamsnotifier.plugin.model.MeasuresContainer;
+import com.proxym.sonarteamsnotifier.exceptions.InvalidHttpResponseException;
+import com.proxym.sonarteamsnotifier.model.MeasuresContainer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.sonar.api.utils.log.Logger;

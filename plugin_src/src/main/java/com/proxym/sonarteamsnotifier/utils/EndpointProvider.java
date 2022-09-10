@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin.utils;
+package com.proxym.sonarteamsnotifier.utils;
 
 import com.proxym.sonarteamsnotifier.DataProvider;
 import com.proxym.sonarteamsnotifier.constants.Constants;

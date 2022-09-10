@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin;
+package com.proxym.sonarteamsnotifier;
 
 import java.io.IOException;
 import java.io.InputStream;

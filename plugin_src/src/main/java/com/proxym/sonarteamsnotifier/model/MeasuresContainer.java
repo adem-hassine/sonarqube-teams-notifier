@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin.model;
+package com.proxym.sonarteamsnotifier.model;
 
 
 import java.util.List;
