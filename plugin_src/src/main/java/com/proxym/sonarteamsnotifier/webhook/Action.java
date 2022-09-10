@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin.webhook;
+package com.proxym.sonarteamsnotifier.webhook;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

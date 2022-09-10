@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.plugin.constants;
+package com.proxym.sonarteamsnotifier.constants;
 
 
 

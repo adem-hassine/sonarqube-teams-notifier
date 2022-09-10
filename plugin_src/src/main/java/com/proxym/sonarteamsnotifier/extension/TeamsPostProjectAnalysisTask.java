@@ -1,6 +1,6 @@
-package com.proxym.sonarteamsnotifier.plugin.extension;
+package com.proxym.sonarteamsnotifier.extension;
 
-import com.proxym.sonarteamsnotifier.plugin.constants.Constants;
+import com.proxym.sonarteamsnotifier.constants.Constants;
 
 import java.util.Map;
 

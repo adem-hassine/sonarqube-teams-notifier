@@ -3,10 +3,8 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.proxym.sonarteamsnotifier.constants.Constants;
 import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
@@ -24,21 +22,23 @@ import org.sonar.api.ce.posttask.QualityGate;
  */
 class PayloadBuilder {
 
+  private final String[] metrics;
+  private final boolean showAuthor;
   /**
    * Logger.
    */
   @Getter
-  private  String token;
+  private final  String token;
 
   /**
    * Project Analysis.
    */
-  private PostProjectAnalysisTask.ProjectAnalysis analysis;
+  private final PostProjectAnalysisTask.ProjectAnalysis analysis;
 
   /**
    * Project URL.
    */
-  private String baseUrl;
+  private final String baseUrl;
 
   /**
    * Whether to send notifications on only failures.
@@ -47,13 +47,13 @@ class PayloadBuilder {
   /**
    * Whether the overall QualityGate status is OK or not.
    */
-  private boolean qualityGateOk;
+  private final boolean qualityGateOk;
 
   /**
    * Decimal format for percentages.
    */
-  private DecimalFormat percentageFormat;
-  private String projectId;
+  private final DecimalFormat percentageFormat;
+  private final String projectId;
 
   /**
    * Constructor.
