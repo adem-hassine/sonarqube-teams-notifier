@@ -7,10 +7,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataProvider {
+  private DataProvider(){}
   protected static final String APPLICATION_PROPERTIES = "application.properties";
   protected static Properties applicationProperties = new Properties();
   protected static final Logger LOGGER = Logger.getLogger(DataProvider.class.getCanonicalName());
-
   static {
     final ClassLoader classLoader = DataProvider.class.getClassLoader();
 
@@ -24,7 +24,7 @@ public class DataProvider {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
   }
-  public String getProperty(String name){
+  public static String getProperty(String name){
     return applicationProperties.getProperty(name);
   }
 }

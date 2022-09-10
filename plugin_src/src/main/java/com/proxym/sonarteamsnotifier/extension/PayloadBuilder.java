@@ -3,9 +3,12 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.proxym.sonarteamsnotifier.constants.Constants;
 import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
 import com.proxym.sonarteamsnotifier.model.Measure;
 import com.proxym.sonarteamsnotifier.model.MeasuresContainer;
@@ -51,6 +54,8 @@ class PayloadBuilder {
    */
   private DecimalFormat percentageFormat;
   private String projectId;
+  private boolean showAuthor;
+  private String[] metrics;
 
   /**
    * Constructor.
@@ -64,7 +69,9 @@ class PayloadBuilder {
       String baseUrl,
       boolean qualityGateOk,
       String token,
-      String projectId) {
+      String projectId,
+      String[] metrics,
+      boolean showAuthor) {
     this.analysis = analysis;
     this.baseUrl = baseUrl;
     this.qualityGateOk = qualityGateOk;
@@ -73,6 +80,8 @@ class PayloadBuilder {
     this.percentageFormat = new DecimalFormat();
     this.percentageFormat.setMaximumFractionDigits(2);
     this.projectId= projectId;
+    this.metrics = metrics;
+    this.showAuthor= showAuthor;
   }
 
   /**
@@ -89,9 +98,12 @@ class PayloadBuilder {
       String baseUrl,
       boolean qualityGateOk,
       String token,
-      String projectId
+      String projectId,
+      String[] metrics,
+      boolean showAuthor
+
   ) {
-    return new PayloadBuilder(analysis, baseUrl, qualityGateOk,token,projectId);
+    return new PayloadBuilder(analysis, baseUrl, qualityGateOk,token,projectId,metrics,showAuthor);
   }
   /**
    * Builds the payload.
@@ -157,7 +169,7 @@ class PayloadBuilder {
   private void appendConditions(Payload message) {
     Section section = message.getSections().get(0);
     section.setFacts(new ArrayList<>());
-    MeasuresContainer measuresContainer =  SonarRequestSender.get(baseUrl, EndpointProvider.measuresDetails(analysis.getProject().getKey()),token);
+    MeasuresContainer measuresContainer =  SonarRequestSender.get(baseUrl, EndpointProvider.measuresDetails(analysis.getProject().getKey(), String.join(Constants.COMMA, metrics)),token);
     for (Measure measure : measuresContainer.getMeasures()) {
       Fact fact = new Fact();
       fact.setName(measure.getMetric());
