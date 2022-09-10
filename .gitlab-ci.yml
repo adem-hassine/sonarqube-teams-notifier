@@ -104,3 +104,17 @@ launch_live_debug:
         # to be added in next milestone 
     rules:
        - if: '$CI_COMMIT_TAG =~ /live-debug/'
+       
+##################################################################""
+# this is a debug job used to check gitlab  env variables 
+gitlab_debug:
+    stage: debug 
+    tags:
+        - docker
+    image: alpine:latest
+    before_script: 
+        - echo "getting env variables "
+    script:
+        - echo $CI_PIPELINE_SOURCE	
+    only:
+        - develop
