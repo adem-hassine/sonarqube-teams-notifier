@@ -1,9 +1,8 @@
 package com.proxym.sonarteamsnotifier.extension;
 
 import com.proxym.sonarteamsnotifier.exceptions.InvalidHttpResponseException;
+import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
 import com.proxym.sonarteamsnotifier.model.MeasuresContainer;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonarqube.ws.client.GetRequest;
@@ -13,11 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 public class SonarRequestSender {
-  private static final ObjectMapper objectMapper = new ObjectMapper();
   private SonarRequestSender(){}
-  static {
-      objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-  }
 
   private static final Logger LOG = Loggers.get(SonarRequestSender.class);
   public static MeasuresContainer get(String baseUrl, String url, String token) {
@@ -28,7 +23,7 @@ public class SonarRequestSender {
       .credentials(token,null).build();
     try{
       String response = httpConnector.call(new GetRequest(url)).content();
-      return objectMapper.readValue(response, MeasuresContainer.class);
+      return ObjectMapperConfigurer.objectMapper.readValue(response, MeasuresContainer.class);
 
     }catch (Exception exception){
       LOG.error("Request failed ! {}",exception.getMessage() );

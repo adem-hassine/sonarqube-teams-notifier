@@ -3,14 +3,16 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.proxym.sonarteamsnotifier.DataProvider;
 import com.proxym.sonarteamsnotifier.constants.Constants;
 import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
 import com.proxym.sonarteamsnotifier.model.Measure;
 import com.proxym.sonarteamsnotifier.model.MeasuresContainer;
-import com.proxym.sonarteamsnotifier.utils.EndpointProvider;
 import com.proxym.sonarteamsnotifier.webhook.*;
 import lombok.Getter;
 import org.sonar.api.ce.posttask.Branch;
@@ -135,7 +137,7 @@ class PayloadBuilder {
       String projectName
   ) {
     message.setType(PayloadUtils.MESSAGE_CARD);
-    message.setThemeColor(qualityGateOk ? PayloadUtils.GREEN_COLOR :PayloadUtils.RED_COLOR);
+    message.setThemeColor(qualityGateOk ? Constants.GREEN_COLOR :Constants.RED_COLOR);
     message.setSummary(PayloadUtils.SUMMARY.concat(projectName));
     message.setSections(new ArrayList<>());
   }
@@ -154,7 +156,7 @@ class PayloadBuilder {
       branchSubtitle  = present.getName().map(name -> "Branch " + name +",").orElse("");
     }
     section.setActivitySubtitle(branchSubtitle + "Status : [".concat(qualityGate.getStatus().toString()).concat("]"));
-    section.setActivityImage(PayloadUtils.LOGO_URL);
+    section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
     message.getSections().add(section);
 
   }
@@ -167,7 +169,8 @@ class PayloadBuilder {
   private void appendConditions(Payload message) {
     Section section = message.getSections().get(0);
     section.setFacts(new ArrayList<>());
-    MeasuresContainer measuresContainer =  SonarRequestSender.get(baseUrl, EndpointProvider.measuresDetails(analysis.getProject().getKey(), String.join(Constants.COMMA, metrics)),token);
+    String url =  String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT),projectId, Arrays.stream(metrics).collect(Collectors.joining(Constants.COMMA)),2);
+    MeasuresContainer measuresContainer =  SonarRequestSender.get(baseUrl,url,token);
     for (Measure measure : measuresContainer.getMeasures()) {
       Fact fact = new Fact();
       fact.setName(measure.getMetric());
