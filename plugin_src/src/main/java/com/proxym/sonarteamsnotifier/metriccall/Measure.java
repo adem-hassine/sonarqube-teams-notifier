@@ -1,4 +1,4 @@
-package com.proxym.sonarteamsnotifier.model;
+package com.proxym.sonarteamsnotifier.metriccall;
 
 import java.util.ArrayList;
 import java.util.List;

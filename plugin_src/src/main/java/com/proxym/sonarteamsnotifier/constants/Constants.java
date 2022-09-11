@@ -72,8 +72,6 @@ public class Constants {
      * Administration config for sending notification in both case .
      */
     public static final String ANYWAYS = "Both";
-    public static final String GREEN_COLOR="008000";
-    public static final String RED_COLOR="bc4749";
 
 
     private Constants() {

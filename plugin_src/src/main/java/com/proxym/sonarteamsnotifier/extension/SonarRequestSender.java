@@ -2,7 +2,7 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import com.proxym.sonarteamsnotifier.exceptions.InvalidHttpResponseException;
 import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
-import com.proxym.sonarteamsnotifier.model.MeasuresContainer;
+import com.proxym.sonarteamsnotifier.metriccall.MeasuresContainer;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonarqube.ws.client.GetRequest;
