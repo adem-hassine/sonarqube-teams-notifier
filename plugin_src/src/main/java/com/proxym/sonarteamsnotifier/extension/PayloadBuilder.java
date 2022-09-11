@@ -171,7 +171,7 @@ class PayloadBuilder {
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
         section.setFacts(new ArrayList<>());
-        String url = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, Arrays.stream(metrics).collect(Collectors.joining(Constants.COMMA)), 2);
+        String url = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics), 2);
         MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, url, token);
         CalculatorResponse response = MetricsCalculator.calculate(measuresContainer.getMeasures());
         section.getFacts().addAll(response.getMeasures().stream().map(measure ->
