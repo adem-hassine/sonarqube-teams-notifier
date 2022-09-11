@@ -49,7 +49,7 @@ public class MetricsCalculator {
                     MeasureDto measureDto = new MeasureDto();
                     MetricDetails metricDetails = metrics.stream().filter(metricDetail -> metricDetail.getKey().equals(measure.getMetric())).findFirst().orElseThrow(MetricNotFoundException::new);
                     measureDto.setMetric(measure.getMetric());
-                    measureDto.setDescription(measureDto.getDescription());
+                    measureDto.setDescription(metricDetails.getName());
                     measureDto.setType(metricDetails.getType());
                     List<History> histories = measure.getHistory();
                     String recentValue = histories.get(0).getValue();
@@ -74,7 +74,7 @@ public class MetricsCalculator {
                 }
 
 
-        ).sorted(Comparator.comparing(MeasureDto::getOrder)).collect(Collectors.toList()));
+        ).sorted(Comparator.comparing(MeasureDto::getOrder).reversed()).collect(Collectors.toList()));
     }
 
     public static boolean isNumber(String string) {
