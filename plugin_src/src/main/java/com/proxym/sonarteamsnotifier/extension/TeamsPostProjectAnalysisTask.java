@@ -3,6 +3,7 @@ package com.proxym.sonarteamsnotifier.extension;
 import com.proxym.sonarteamsnotifier.constants.Constants;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
 import org.sonar.api.ce.posttask.QualityGate;
@@ -39,6 +40,7 @@ public class TeamsPostProjectAnalysisTask implements PostProjectAnalysisTask {
      */
     @Override
     public void finished(final Context context) {
+        boolean showAuthor = settings.getBoolean(Constants.SHOW_AUTHOR).orElse(false);
         if (!isPluginEnabled()) {
             LOG.info("Teams Notifier Plugin disabled.");
             return;
@@ -50,6 +52,10 @@ public class TeamsPostProjectAnalysisTask implements PostProjectAnalysisTask {
         Map<String, String> properties = context.getProjectAnalysis().getScannerContext().getProperties();
         if (!properties.containsKey(Constants.HOOK)) {
             LOG.info("No hook URL found for Teams Notifier Plugin.");
+            return;
+        }
+        if (showAuthor && !properties.containsKey(Constants.SHOW_AUTHOR)) {
+            LOG.info("No author were provided by scanner side");
             return;
         }
         if (!properties.containsKey(Constants.TOKEN)) {
@@ -64,6 +70,7 @@ public class TeamsPostProjectAnalysisTask implements PostProjectAnalysisTask {
             LOG.info("No server url found for teams notifier plugin");
             return;
         }
+        Optional<String> authorName = showAuthor ? settings.get(Constants.SHOW_AUTHOR) : Optional.empty();
         String projectUrl = properties.get(Constants.SERVER_URL);
         String hook = properties.get(Constants.HOOK);
         String token = properties.get(Constants.TOKEN);
@@ -71,7 +78,7 @@ public class TeamsPostProjectAnalysisTask implements PostProjectAnalysisTask {
         LOG.debug("Analysis ScannerContext: [{}]", properties);
         LOG.debug("Teams notification URL: " + hook);
         LOG.debug("Teams notification analysis: " + context);
-        sendNotification(hook, context, token, projectId, projectUrl);
+        sendNotification(hook, context, token, projectId, projectUrl,authorName);
     }
 
     /**
@@ -89,14 +96,14 @@ public class TeamsPostProjectAnalysisTask implements PostProjectAnalysisTask {
      *
      * @param hook The hook URL.
      */
-    private void sendNotification(String hook, Context context, String token, String projectId, String serverUrl) {
+    private void sendNotification(String hook, Context context, String token, String projectId, String serverUrl,Optional<String> authorName) {
         try {
             ProjectAnalysis analysis = context.getProjectAnalysis();
             TeamsHttpClient httpClient = TeamsHttpClient
                     .of(hook, PayloadBuilder.of(analysis,
                                     serverUrl, qualityGateOk(context),
                                     token, projectId, settings.getStringArray(Constants.REPORTS_METRICS),
-                                    settings.getBoolean(Constants.SHOW_AUTHOR).orElse(false))
+                                    authorName)
                             .build())
                     .build();
             if (httpClient.post()) {
