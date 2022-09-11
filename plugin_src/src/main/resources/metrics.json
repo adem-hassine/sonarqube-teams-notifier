@@ -1,6 +1,6 @@
 [
   {
-    "key": "new_duplicated_lines_density",
+    "key": "duplicated_lines_density",
     "name": "Duplicated Lines (%) on New Code",
     "description": "Duplicated lines (%) on new code balanced by statements",
     "domain": "Duplications",
@@ -109,7 +109,7 @@
     "hidden": false
   },
   {
-    "key": "new_lines",
+    "key": "lines",
     "name": "New Lines",
     "description": "New lines",
     "domain": "Size",
@@ -140,7 +140,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_code_smells",
+    "key": "code_smells",
     "name": "New Code Smells",
     "description": "New Code Smells",
     "domain": "Maintainability",
@@ -162,7 +162,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_bugs",
+    "key": "bugs",
     "name": "New Bugs",
     "description": "New Bugs",
     "domain": "Reliability",
@@ -184,7 +184,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_vulnerabilities",
+    "key": "vulnerabilities",
     "name": "New Vulnerabilities",
     "description": "New Vulnerabilities",
     "domain": "Security",
@@ -206,7 +206,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_security_hotspots",
+    "key": "security_hotspots",
     "name": "New Security Hotspots",
     "description": "New Security Hotspots",
     "domain": "SecurityReview",
@@ -228,7 +228,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_technical_debt",
+    "key": "technical_debt",
     "name": "Added Technical Debt",
     "description": "Added technical debt",
     "domain": "Maintainability",
@@ -251,7 +251,7 @@
     "worstValue": "5.0"
   },
   {
-    "key": "new_maintainability_rating",
+    "key": "maintainability_rating",
     "name": "Maintainability Rating on New Code",
     "description": "Maintainability rating on new code",
     "domain": "Maintainability",
@@ -275,7 +275,7 @@
     "worstValue": "5.0"
   },
   {
-    "key": "new_reliability_rating",
+    "key": "reliability_rating",
     "name": "Reliability Rating on New Code",
     "description": "Reliability rating on new code",
     "domain": "Reliability",
@@ -310,7 +310,7 @@
     "worstValue": "0.0"
   },
   {
-    "key": "new_coverage",
+    "key": "coverage",
     "name": "Coverage on New Code",
     "description": "Coverage of new/changed code",
     "domain": "Coverage",
@@ -333,7 +333,7 @@
     "hidden": false
   },
   {
-    "key": "new_lines_to_cover",
+    "key": "lines_to_cover",
     "name": "Lines to Cover on New Code",
     "description": "Lines to cover on new code",
     "domain": "Coverage",
@@ -343,7 +343,7 @@
     "hidden": false
   },
   {
-    "key": "new_critical_violations",
+    "key": "critical_violations",
     "name": "New Critical Issues",
     "description": "New Critical issues",
     "domain": "Issues",
@@ -354,7 +354,7 @@
     "bestValue": "0"
   },
   {
-    "key": "new_security_rating",
+    "key": "security_rating",
     "name": "Security Rating on New Code",
     "description": "Security rating on new code",
     "domain": "Security",
@@ -378,7 +378,7 @@
     "worstValue": "5.0"
   },
   {
-    "key": "new_security_review_rating",
+    "key": "security_review_rating",
     "name": "Security Review Rating on New Code",
     "description": "Security Review Rating on New Code",
     "domain": "SecurityReview",
@@ -403,7 +403,7 @@
     "worstValue": "0.0"
   },
   {
-    "key": "new_security_hotspots_reviewed",
+    "key": "security_hotspots_reviewed",
     "name": "Security Hotspots Reviewed on New Code",
     "description": "Percentage of Security Hotspots Reviewed on New Code",
     "domain": "SecurityReview",
@@ -416,7 +416,7 @@
     "worstValue": "0.0"
   },
   {
-    "key": "new_blocker_violations",
+    "key": "blocker_violations",
     "name": "New Blocker Issues",
     "description": "New Blocker issues",
     "domain": "Issues",
