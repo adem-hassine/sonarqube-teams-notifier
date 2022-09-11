@@ -20,6 +20,7 @@ import lombok.Setter;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +36,9 @@ public class MetricsCalculator {
 
     static {
         try {
-            List<?> metricObjects = new Gson().fromJson(JsonParser.parseReader(new FileReader("plugin_src/src/main/resources/metrics.json")), List.class);
+            List<?> metricObjects = ObjectMapperConfigurer.objectMapper.readValue( MetricsCalculator.class.getResourceAsStream("/metrics.json"),List.class);
             metrics = metricObjects.stream().map(obj -> ObjectMapperConfigurer.convertInstanceOfObject(obj, MetricDetails.class)).collect(Collectors.toList());
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new InitialMetricsFileNotFound("Verify existence of metrics file!");
         }
     }
