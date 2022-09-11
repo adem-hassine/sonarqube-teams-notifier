@@ -41,7 +41,7 @@ public class TeamsNotifierPlugin implements Plugin {
         extensions.add(getProperty(Constants.SHOW_AUTHOR, "Show Author",
                 "Post author name with notification",
                 "false", PropertyType.BOOLEAN));
-        extensions.add(getSelectProperty(Constants.METRICS, "Available metrics",
+        extensions.add(getSelectProperty(Constants.REPORTS_METRICS, "Available metrics",
                 "Choose metrics in order to be sent within the teams notification?",
                 Arrays.stream(DataProvider.getProperty(Constants.REPORTS_METRICS)
                         .split(Constants.COMMA)).collect(Collectors.toList()), PropertyType.SINGLE_SELECT_LIST, true));
