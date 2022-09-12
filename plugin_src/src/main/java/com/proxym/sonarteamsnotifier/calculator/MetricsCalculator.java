@@ -1,9 +1,6 @@
 package com.proxym.sonarteamsnotifier.calculator;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
 import com.proxym.sonarteamsnotifier.exceptions.InitialMetricsFileNotFound;
 import com.proxym.sonarteamsnotifier.exceptions.MetricNotFoundException;
 import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
@@ -13,13 +10,9 @@ import com.proxym.sonarteamsnotifier.metriccall.dto.CalculatorResponse;
 import com.proxym.sonarteamsnotifier.metriccall.dto.Color;
 import com.proxym.sonarteamsnotifier.metriccall.dto.MeasureDto;
 import com.proxym.sonarteamsnotifier.metriccall.dto.Type;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -44,7 +37,7 @@ public class MetricsCalculator {
     }
 
     public static CalculatorResponse calculate(List<Measure> measures) {
-        boolean firstScan = measures.get(0).getHistory().size() > 1 ;
+        boolean firstScan = measures.get(0).getHistory().size() < 1 ;
         return new CalculatorResponse(firstScan, measures.stream().filter(measure -> !measure.getHistory().isEmpty()).map(measure -> {
                     MeasureDto measureDto = new MeasureDto();
                     MetricDetails metricDetails = metrics.stream().filter(metricDetail -> metricDetail.getKey().equals(measure.getMetric())).findFirst().orElseThrow(MetricNotFoundException::new);
@@ -56,7 +49,7 @@ public class MetricsCalculator {
                     Optional<String> previousValue = Optional.empty();
                     double difference = 0;
                     String measureDifference = "";
-                    if (firstScan) {
+                    if (!firstScan) {
                         previousValue = Optional.of(histories.get(1).getValue());
                     }
                     if (isNumber(recentValue)) {

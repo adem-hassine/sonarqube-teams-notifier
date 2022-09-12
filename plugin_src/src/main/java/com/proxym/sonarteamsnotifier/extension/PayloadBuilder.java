@@ -156,9 +156,10 @@ class PayloadBuilder {
     private void appendCommit(Payload message, QualityGate qualityGate, Optional<Branch> optionalBranch, String projectName) {
         Section section = new Section();
         section.setActivityTitle(PayloadUtils.SUMMARY.concat(projectName) + authorName.map(author -> ", Author:" + authorName).orElse(""));
-        section.setActivitySubtitle(optionalBranch.map(branch ->
-                String.format(PayloadUtils.BRANCH, PayloadUtils.BLUE_COLOR, branch.getName())).orElse("") +
-                String.format(PayloadUtils.STATUS, qualityGateOk ? PayloadUtils.GREEN_COLOR : PayloadUtils.RED_COLOR, "["+qualityGate.getStatus().toString()+"]"));
+        section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent())
+                .map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get()))
+                .orElse("") +
+                String.format(PayloadUtils.STATUS, qualityGateOk ? PayloadUtils.GREEN_COLOR :  "["+qualityGate.getStatus().toString()+"]"));
         section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
         message.getSections().add(section);
 
