@@ -37,7 +37,7 @@ public class MetricsCalculator {
     }
 
     public static CalculatorResponse calculate(List<Measure> measures) {
-        boolean firstScan = measures.get(0).getHistory().size() < 1 ;
+        boolean firstScan = !measures.isEmpty() &&  measures.get(0).getHistory().size() < 2 ;
         return new CalculatorResponse(firstScan, measures.stream().filter(measure -> !measure.getHistory().isEmpty()).map(measure -> {
                     MeasureDto measureDto = new MeasureDto();
                     MetricDetails metricDetails = metrics.stream().filter(metricDetail -> metricDetail.getKey().equals(measure.getMetric())).findFirst().orElseThrow(MetricNotFoundException::new);
@@ -54,7 +54,6 @@ public class MetricsCalculator {
                     }
                     if (isNumber(recentValue)) {
                         difference = convert(recentValue) - convert(previousValue.orElse("0"));
-                        measureDifference = Double.toString(difference);
                     }
                     if (metricDetails.getType().equals(Type.PERCENT)) {
                         recentValue += "%";
