@@ -159,7 +159,7 @@ class PayloadBuilder {
         section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent())
                 .map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get()))
                 .orElse("") +
-                String.format(PayloadUtils.STATUS, qualityGateOk ? PayloadUtils.GREEN_COLOR :  "["+qualityGate.getStatus().toString()+"]"));
+                String.format(PayloadUtils.STATUS,qualityGate.getStatus().toString()));
         section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
         message.getSections().add(section);
 
