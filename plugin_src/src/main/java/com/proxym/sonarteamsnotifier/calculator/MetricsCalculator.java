@@ -25,7 +25,7 @@ public class MetricsCalculator {
     protected static final Logger LOGGER = Logger.getLogger(MetricsCalculator.class.getCanonicalName());
 
     private static final List<MetricDetails> metrics;
-    private static final String NUMBERS_REGEX = "^[0-9]+?\\.?[0-9]+$";
+    private static final String NUMBERS_REGEX = "^[0-9]*\\.?[0-9]*$";
 
     static {
         try {
@@ -71,7 +71,7 @@ public class MetricsCalculator {
     }
 
     public static boolean isNumber(String string) {
-        return string.matches(NUMBERS_REGEX);
+        return !string.isEmpty() && string.matches(NUMBERS_REGEX);
     }
 
     private static void assignColor(MeasureDto measureDto, double difference, boolean higherValuesAreBetter) {
