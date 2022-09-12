@@ -1,12 +1,10 @@
 package com.proxym.sonarteamsnotifier.extension;
 
-import com.proxym.sonarteamsnotifier.exceptions.HttpClientException;
 import com.proxym.sonarteamsnotifier.exceptions.InvalidHttpResponseException;
 import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
 import com.proxym.sonarteamsnotifier.webhook.Payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,10 +41,6 @@ class TeamsHttpClient {
    */
   private Payload payload;
 
-  /**
-   * Internal Apache HTTP Client.
-   */
-  private CloseableHttpClient httpClient;
 
   /**
    * Whether or not to bypass HTTPS validation.
@@ -96,7 +90,6 @@ class TeamsHttpClient {
   TeamsHttpClient build() throws UnsupportedEncodingException, JsonProcessingException {
     int port = getPort();
     path = getPath();
-    httpClient = getHttpClient();
     target = new HttpHost(hook.getHost(), port, hook.getProtocol());
     httpPost = getHttpPost();
 
@@ -117,8 +110,8 @@ class TeamsHttpClient {
    */
   boolean post() {
     boolean success = false;
-    try {
-      CloseableHttpResponse response = httpClient.execute(target, httpPost);
+    try (CloseableHttpClient client = HttpClients.createDefault()){
+      CloseableHttpResponse response = client.execute(target, httpPost);
       int responseCode = response.getStatusLine().getStatusCode();
       if (responseCode < 200 || responseCode > 299) {
         throw new InvalidHttpResponseException("Invalid HTTP Response Code: " + responseCode);
@@ -128,14 +121,7 @@ class TeamsHttpClient {
       success = true;
     } catch (Exception e) {
       LOG.error("Failed to send teams message", e);
-    } finally {
-      try {
-        httpClient.close();
-      } catch (Exception e) {
-        LOG.error("Unable to close HTTP Client", e);
-      }
     }
-
     return success;
   }
 
@@ -151,19 +137,6 @@ class TeamsHttpClient {
     tempHttpPost.setHeader("Accept", "application/json");
     tempHttpPost.setHeader("Content-type", "application/json");
     return tempHttpPost;
-  }
-
-  /**
-   * Gets the internal HTTP Client to be used for the request.
-   *
-   * @return The HTTP Client.
-   */
-  private CloseableHttpClient getHttpClient() {
-    try (CloseableHttpClient teamsHttpClient = HttpClients.createDefault()) {
-      return teamsHttpClient;
-    } catch (IOException e) {
-      throw new HttpClientException("Could not instantiate a default http client");
-    }
   }
 
 
