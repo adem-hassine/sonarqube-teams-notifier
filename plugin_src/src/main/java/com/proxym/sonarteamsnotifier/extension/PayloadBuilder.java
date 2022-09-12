@@ -159,7 +159,7 @@ class PayloadBuilder {
         section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent())
                 .map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get()))
                 .orElse("") +
-                String.format(PayloadUtils.STATUS, qualityGateOk ? PayloadUtils.GREEN_COLOR :  "["+qualityGate.getStatus().toString()+"]"));
+                String.format(PayloadUtils.STATUS,qualityGate.getStatus().toString()));
         section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
         message.getSections().add(section);
 
@@ -178,7 +178,6 @@ class PayloadBuilder {
         section.getFacts().addAll(response.getMeasures().stream().map(measure ->
                 {
                     Fact fact = new Fact();
-                    MetricsCalculator.calculate(measuresContainer.getMeasures());
                     fact.setName(measure.getDescription());
                     fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
                     return fact;
