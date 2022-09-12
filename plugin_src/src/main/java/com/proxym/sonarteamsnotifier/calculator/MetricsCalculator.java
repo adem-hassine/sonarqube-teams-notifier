@@ -25,7 +25,7 @@ public class MetricsCalculator {
     protected static final Logger LOGGER = Logger.getLogger(MetricsCalculator.class.getCanonicalName());
 
     private static final List<MetricDetails> metrics;
-    private static final String NUMBERS_REGEX = "\\d+?\\.\\d+";
+    private static final String NUMBERS_REGEX = "^[0-9]+?\\.?[0-9]+$";
 
     static {
         try {
