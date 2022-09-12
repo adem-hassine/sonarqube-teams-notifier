@@ -54,6 +54,7 @@ public class MetricsCalculator {
                     }
                     if (isNumber(recentValue)) {
                         difference = convert(recentValue) - convert(previousValue.orElse("0"));
+                        measureDifference = difference % 1 == 0 ? (int) difference+"": difference+"";
                     }
                     if (metricDetails.getType().equals(Type.PERCENT)) {
                         recentValue += "%";
