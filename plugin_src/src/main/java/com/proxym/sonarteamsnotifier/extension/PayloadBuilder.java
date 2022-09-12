@@ -3,7 +3,6 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -203,7 +202,7 @@ class PayloadBuilder {
         action.setName("Show More");
         ActionTarget target = new ActionTarget();
         target.setOs("default");
-        target.setUri(baseUrl.concat("dashboard?id=".concat(projectId)));
+        target.setUri(baseUrl.concat("/dashboard?id=".concat(projectId)));
         List<ActionTarget> targets = new ArrayList<>();
         targets.add(target);
         action.setTargets(targets);
