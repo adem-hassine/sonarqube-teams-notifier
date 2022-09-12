@@ -178,7 +178,6 @@ class PayloadBuilder {
         section.getFacts().addAll(response.getMeasures().stream().map(measure ->
                 {
                     Fact fact = new Fact();
-                    MetricsCalculator.calculate(measuresContainer.getMeasures());
                     fact.setName(measure.getDescription());
                     fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
                     return fact;
