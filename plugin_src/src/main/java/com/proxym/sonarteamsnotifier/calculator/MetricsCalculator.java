@@ -3,9 +3,12 @@ package com.proxym.sonarteamsnotifier.calculator;
 
 import com.proxym.sonarteamsnotifier.exceptions.InitialMetricsFileNotFound;
 import com.proxym.sonarteamsnotifier.exceptions.MetricNotFoundException;
+import com.proxym.sonarteamsnotifier.extension.SonarRequestSender;
 import com.proxym.sonarteamsnotifier.jackson.ObjectMapperConfigurer;
 import com.proxym.sonarteamsnotifier.metriccall.History;
 import com.proxym.sonarteamsnotifier.metriccall.Measure;
+import com.proxym.sonarteamsnotifier.metriccall.MeasuresContainer;
+import com.proxym.sonarteamsnotifier.metriccall.SonarPage;
 import com.proxym.sonarteamsnotifier.metriccall.dto.CalculatorResponse;
 import com.proxym.sonarteamsnotifier.metriccall.dto.Color;
 import com.proxym.sonarteamsnotifier.metriccall.dto.MeasureDto;
@@ -14,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +40,8 @@ public class MetricsCalculator {
         }
     }
 
-    public static CalculatorResponse calculate(List<Measure> measures) {
+    public static CalculatorResponse calculate(String baseUrl,String noPageDefinitionUrl,String token) {
+        List<Measure> measures= provideMeasures(baseUrl,noPageDefinitionUrl,token);
         boolean firstScan = !measures.isEmpty() &&  measures.get(0).getHistory().size() < 2 ;
         return new CalculatorResponse(firstScan, measures.stream().filter(measure -> !measure.getHistory().isEmpty()).map(measure -> {
                     MeasureDto measureDto = new MeasureDto();
@@ -68,6 +73,16 @@ public class MetricsCalculator {
 
 
         ).sorted(Comparator.comparing(MeasureDto::getOrder).reversed()).collect(Collectors.toList()));
+    }
+
+    public static List<Measure> provideMeasures(String baseUrl,String noPageDefinitionUrl,String token){
+        MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl,0,0), token);
+        Integer total = measuresContainer.getPaging().getTotal();
+        List<Measure> measures = new ArrayList<>(SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl, 2, total / 2), token).getMeasures());
+        if (total % 2 != 0){
+        measures.addAll(SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl, 2, total / 2 +1), token).getMeasures());
+        }
+        return measures;
     }
 
     public static boolean isNumber(String string) {
