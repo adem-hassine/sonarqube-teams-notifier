@@ -69,14 +69,7 @@ class PayloadBuilder {
      * @param baseUrl       The URL for the project.
      * @param qualityGateOk Whether the overall quality gate status is OK or not.
      */
-    private PayloadBuilder(
-            PostProjectAnalysisTask.ProjectAnalysis analysis,
-            String baseUrl,
-            boolean qualityGateOk,
-            String token,
-            String projectId,
-            String[] metrics,
-            Optional<String> authorName) {
+    private PayloadBuilder(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics, Optional<String> authorName) {
         this.analysis = analysis;
         this.baseUrl = baseUrl;
         this.qualityGateOk = qualityGateOk;
@@ -97,14 +90,7 @@ class PayloadBuilder {
      * @param qualityGateOk Whether the overall quality gate status is OK or not.
      * @return The PayloadBuilder
      */
-    static PayloadBuilder of(
-            PostProjectAnalysisTask.ProjectAnalysis analysis,
-            String baseUrl,
-            boolean qualityGateOk,
-            String token,
-            String projectId,
-            String[] metrics,
-            Optional<String> authorName
+    static PayloadBuilder of(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics, Optional<String> authorName
 
     ) {
         return new PayloadBuilder(analysis, baseUrl, qualityGateOk, token, projectId, metrics, authorName);
@@ -137,10 +123,7 @@ class PayloadBuilder {
      *
      * @param message The StringBuilder being used to build the message.
      */
-    private void appendHeader(
-            Payload message,
-            String projectName
-    ) {
+    private void appendHeader(Payload message, String projectName) {
         message.setType(PayloadUtils.MESSAGE_CARD);
         message.setThemeColor(qualityGateOk ? PayloadUtils.GREEN_COLOR : PayloadUtils.RED_COLOR);
         message.setSummary(PayloadUtils.SUMMARY.concat(projectName));
@@ -155,10 +138,7 @@ class PayloadBuilder {
     private void appendCommit(Payload message, QualityGate qualityGate, Optional<Branch> optionalBranch, String projectName) {
         Section section = new Section();
         section.setActivityTitle(PayloadUtils.SUMMARY.concat(projectName) + authorName.map(author -> ", Author:" + authorName).orElse(""));
-        section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent())
-                .map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get()))
-                .orElse("") +
-                String.format(PayloadUtils.STATUS,qualityGate.getStatus().toString()));
+        section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent()).map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get())).orElse("") + String.format(PayloadUtils.STATUS, qualityGate.getStatus().toString()));
         section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
         message.getSections().add(section);
 
@@ -171,28 +151,24 @@ class PayloadBuilder {
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
         section.setFacts(new ArrayList<>());
-        String url = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics), Integer.MAX_VALUE);
-        MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, url, token);
-        CalculatorResponse response = MetricsCalculator.calculate(measuresContainer.getMeasures());
-        section.getFacts().addAll(response.getMeasures().stream().map(measure ->
-                {
-                    Fact fact = new Fact();
-                    fact.setName(measure.getDescription());
-                    fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
-                    return fact;
-                }
-        ).collect(Collectors.toList()));
+        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics));
+        CalculatorResponse response = MetricsCalculator.calculate(baseUrl,noPageDefinitionUrl,token);
+        section.getFacts().addAll(response.getMeasures().stream().map(measure -> {
+            Fact fact = new Fact();
+            fact.setName(measure.getDescription());
+            fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
+            return fact;
+        }).collect(Collectors.toList()));
     }
 
 
     private String appendMetricCondition(boolean firstScan, MeasureDto measureDto) {
-        if (measureDto.getType().equals(Type.LEVEL) || measureDto.getType().equals(Type.DATA)){
-         return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR,measureDto.getColor(),measureDto.getActualValue());
-        }else if (firstScan) {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR,measureDto.getColor(),measureDto.getActualValue());
-        }else {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR,Color.BLACK.getCssStyle(),measureDto.getActualValue()) +
-                   String.format(PayloadUtils.LAST_COMMIT_DETAILS,measureDto.getColor(),measureDto.getDifference()) ;
+        if (measureDto.getType().equals(Type.LEVEL) || measureDto.getType().equals(Type.DATA)) {
+            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getActualValue());
+        } else if (firstScan) {
+            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getActualValue());
+        } else {
+            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, Color.BLACK.getCssStyle(), measureDto.getActualValue()) + String.format(PayloadUtils.LAST_COMMIT_DETAILS, measureDto.getColor(), measureDto.getDifference());
         }
     }
 
@@ -213,9 +189,7 @@ class PayloadBuilder {
 
     private void assertNotNull(Object object, String objectName) {
         if (object == null) {
-            throw new IllegalArgumentException(
-                    "[Assertion failed] - " + objectName + " argument is required; it must not be null"
-            );
+            throw new IllegalArgumentException("[Assertion failed] - " + objectName + " argument is required; it must not be null");
         }
     }
 }
