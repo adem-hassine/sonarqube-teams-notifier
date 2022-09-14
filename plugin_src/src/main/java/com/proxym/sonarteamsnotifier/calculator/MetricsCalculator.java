@@ -45,12 +45,12 @@ public class MetricsCalculator {
                     measureDto.setDescription(metricDetails.getName());
                     measureDto.setType(metricDetails.getType());
                     List<History> histories = measure.getHistory();
-                    String recentValue = histories.get(0).getValue();
+                    String recentValue = histories.get(histories.size()-1).getValue();
                     Optional<String> previousValue = Optional.empty();
                     double difference = 0;
                     String measureDifference = "";
                     if (!firstScan) {
-                        previousValue = Optional.of(histories.get(1).getValue());
+                        previousValue = Optional.of(histories.get(histories.size() - 2).getValue());
                     }
                     if (isNumber(recentValue)) {
                         difference = convert(recentValue) - convert(previousValue.orElse("0"));
