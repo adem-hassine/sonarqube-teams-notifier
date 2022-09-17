@@ -1,6 +1,7 @@
 package com.proxym.sonarteamsnotifier.calculator;
 
 
+import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
 import com.proxym.sonarteamsnotifier.exceptions.InitialMetricsFileNotFound;
 import com.proxym.sonarteamsnotifier.exceptions.MetricNotFoundException;
 import com.proxym.sonarteamsnotifier.extension.SonarRequestSender;
@@ -76,11 +77,11 @@ public class MetricsCalculator {
     }
 
     public static List<Measure> provideMeasures(String baseUrl,String noPageDefinitionUrl,String token){
-        MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl,0,0), token);
+        MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, noPageDefinitionUrl +String.format(PayloadUtils.PAGINATION_PARAMS,0,0), token);
         Integer total = measuresContainer.getPaging().getTotal();
-        List<Measure> measures = new ArrayList<>(SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl, 2, total / 2), token).getMeasures());
+        List<Measure> measures = new ArrayList<>(SonarRequestSender.get(baseUrl, noPageDefinitionUrl +String.format(PayloadUtils.PAGINATION_PARAMS,0,0), token).getMeasures());
         if (total % 2 != 0){
-        measures.addAll(SonarRequestSender.get(baseUrl, String.format(noPageDefinitionUrl, 2, total / 2 +1), token).getMeasures());
+        measures.addAll(SonarRequestSender.get(baseUrl,  noPageDefinitionUrl +String.format(PayloadUtils.PAGINATION_PARAMS,0,0), token).getMeasures());
         }
         return measures;
     }

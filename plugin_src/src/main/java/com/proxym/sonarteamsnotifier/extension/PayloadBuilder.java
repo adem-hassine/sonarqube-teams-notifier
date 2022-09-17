@@ -3,6 +3,7 @@ package com.proxym.sonarteamsnotifier.extension;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -151,7 +152,7 @@ class PayloadBuilder {
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
         section.setFacts(new ArrayList<>());
-        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics));
+        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT),projectId, String.join(Constants.COMMA, metrics));
         CalculatorResponse response = MetricsCalculator.calculate(baseUrl,noPageDefinitionUrl,token);
         section.getFacts().addAll(response.getMeasures().stream().map(measure -> {
             Fact fact = new Fact();

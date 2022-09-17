@@ -17,6 +17,7 @@ public class PayloadUtils {
   public static final String GREEN_COLOR="008000";
   public static final String RED_COLOR="9d0208";
   public static final String BLUE_COLOR="4361ee";
+  public static final String PAGINATION_PARAMS="&ps=%d&p=%d";
   public static final String LAST_COMMIT_DETAILS=String.format(HTML_BOLD_DESCRIPTION_TEXT," , Last commit scan:")+ HTML_ELEMENT_WITH_COLOR;
 
   private PayloadUtils(){}
