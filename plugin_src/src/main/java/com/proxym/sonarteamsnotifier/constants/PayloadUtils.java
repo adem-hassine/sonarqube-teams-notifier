@@ -11,14 +11,14 @@ public class PayloadUtils {
   public static final String HTML_BOLD_DESCRIPTION_TEXT="<p style='display:inline-block;font-weight:bold;'>%s</p>";
   public static final String MESSAGE_CARD="MessageCard";
   public static final String OPEN_URI="OpenUri";
-  public static final String SUMMARY="New merge request created to ";
+  public static final String SUMMARY="Latest version scan for project : ";
   public static final String BRANCH ="Branch name : %s" ;
   public static final String STATUS=" ,Status : [%s]";
   public static final String GREEN_COLOR="008000";
   public static final String RED_COLOR="9d0208";
   public static final String BLUE_COLOR="4361ee";
   public static final String PAGINATION_PARAMS="&ps=%d&p=%d";
-  public static final String LAST_COMMIT_DETAILS=String.format(HTML_BOLD_DESCRIPTION_TEXT," , Last commit scan:")+ HTML_ELEMENT_WITH_COLOR;
-
+  public static final String LAST_COMMIT_DETAILS=String.format(HTML_BOLD_DESCRIPTION_TEXT," , Difference with previous version :")+ HTML_ELEMENT_WITH_COLOR;
+  public static final String ALERT_STATUS_METRIC="alert_status";
   private PayloadUtils(){}
 }

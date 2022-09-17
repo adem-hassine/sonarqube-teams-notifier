@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class History {
   private Date date;
-  private String value;
+  private String value ="0";
 
   public Date getDate() {
     return date;
