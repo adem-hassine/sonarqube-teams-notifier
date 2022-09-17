@@ -11,7 +11,6 @@ import com.proxym.sonarteamsnotifier.DataProvider;
 import com.proxym.sonarteamsnotifier.calculator.MetricsCalculator;
 import com.proxym.sonarteamsnotifier.constants.Constants;
 import com.proxym.sonarteamsnotifier.constants.PayloadUtils;
-import com.proxym.sonarteamsnotifier.metriccall.MeasuresContainer;
 import com.proxym.sonarteamsnotifier.metriccall.dto.CalculatorResponse;
 import com.proxym.sonarteamsnotifier.metriccall.dto.Color;
 import com.proxym.sonarteamsnotifier.metriccall.dto.MeasureDto;
@@ -46,18 +45,9 @@ class PayloadBuilder {
     private final String baseUrl;
 
     /**
-     * Whether to send notifications on only failures.
-     */
-
-    /**
      * Whether the overall QualityGate status is OK or not.
      */
     private final boolean qualityGateOk;
-
-    /**
-     * Decimal format for percentages.
-     */
-    private final DecimalFormat percentageFormat;
 
     private final String projectId;
 
@@ -69,14 +59,17 @@ class PayloadBuilder {
      * @param baseUrl       The URL for the project.
      * @param qualityGateOk Whether the overall quality gate status is OK or not.
      */
-    private PayloadBuilder(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics, Optional<String> authorName) {
+    private PayloadBuilder(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics,  Optional<String> authorName) {
         this.analysis = analysis;
         this.baseUrl = baseUrl;
         this.qualityGateOk = qualityGateOk;
         this.token = token;
         // Round percentages to 2 decimal points.
-        this.percentageFormat = new DecimalFormat();
-        this.percentageFormat.setMaximumFractionDigits(2);
+        /**
+         * Decimal format for percentages.
+         */
+        DecimalFormat percentageFormat = new DecimalFormat();
+        percentageFormat.setMaximumFractionDigits(2);
         this.projectId = projectId;
         this.metrics = metrics;
         this.authorName = authorName;
@@ -151,11 +144,15 @@ class PayloadBuilder {
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
         section.setFacts(new ArrayList<>());
-        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics));
+        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT),projectId, String.join(Constants.COMMA, metrics));
         CalculatorResponse response = MetricsCalculator.calculate(baseUrl,noPageDefinitionUrl,token);
-        section.getFacts().addAll(response.getMeasures().stream().map(measure -> {
+        section.getFacts().addAll(response.getMeasures().stream().filter(measure -> !response.isFirstScan() || !measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)).map(measure -> {
             Fact fact = new Fact();
-            fact.setName(measure.getDescription());
+            if (measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)){
+                fact.setName("Previous ".concat(measure.getDescription()));
+            }else{
+                fact.setName(measure.getDescription());
+            }
             fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
             return fact;
         }).collect(Collectors.toList()));
@@ -163,8 +160,8 @@ class PayloadBuilder {
 
 
     private String appendMetricCondition(boolean firstScan, MeasureDto measureDto) {
-        if (measureDto.getType().equals(Type.LEVEL) || measureDto.getType().equals(Type.DATA)) {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getActualValue());
+        if (measureDto.getType().equals(Type.LEVEL)) {
+            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getDifference());
         } else if (firstScan) {
             return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getActualValue());
         } else {

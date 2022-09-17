@@ -1,18 +1,5 @@
 [
   {
-    "key": "duplicated_lines_density",
-    "name": "Duplicated Lines (%) on New Code",
-    "description": "Duplicated lines (%) on new code balanced by statements",
-    "domain": "Duplications",
-    "type": "PERCENT",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "decimalScale": 1,
-    "bestValue": "0.0",
-    "worstValue": "100.0"
-  },
-  {
     "key": "alert_status",
     "name": "Quality Gate Status",
     "description": "The project status with regard to its quality gate.",
@@ -20,15 +7,6 @@
     "type": "LEVEL",
     "higherValuesAreBetter": true,
     "qualitative": true,
-    "hidden": false
-  },
-  {
-    "key": "quality_gate_details",
-    "name": "Quality Gate Details",
-    "description": "The project detailed status with regard to its quality gate",
-    "domain": "General",
-    "type": "DATA",
-    "qualitative": false,
     "hidden": false
   },
   {
@@ -42,27 +20,6 @@
     "hidden": false,
     "bestValue": "1.0",
     "worstValue": "5.0"
-  },
-  {
-    "key": "critical_severity_vulns",
-    "name": "Critical Severity Vulnerabilities",
-    "description": "Critical Severity Vulnerabilities",
-    "domain": "OWASP-Dependency-Check",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": false,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
-    "key": "projects",
-    "name": "Projects",
-    "description": "Number of projects",
-    "domain": "Size",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": false,
-    "hidden": false
   },
   {
     "key": "duplicated_blocks",
@@ -94,7 +51,7 @@
     "description": "Lines",
     "domain": "Size",
     "type": "INT",
-    "higherValuesAreBetter": false,
+    "higherValuesAreBetter": true,
     "qualitative": false,
     "hidden": false
   },
@@ -102,16 +59,6 @@
     "key": "ncloc",
     "name": "Lines of Code",
     "description": "Non commenting lines of code",
-    "domain": "Size",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": false,
-    "hidden": false
-  },
-  {
-    "key": "lines",
-    "name": "New Lines",
-    "description": "New lines",
     "domain": "Size",
     "type": "INT",
     "higherValuesAreBetter": false,
@@ -140,17 +87,6 @@
     "bestValue": "0"
   },
   {
-    "key": "code_smells",
-    "name": "New Code Smells",
-    "description": "New Code Smells",
-    "domain": "Maintainability",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
     "key": "bugs",
     "name": "Bugs",
     "description": "Bugs",
@@ -158,17 +94,6 @@
     "type": "INT",
     "higherValuesAreBetter": false,
     "qualitative": false,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
-    "key": "bugs",
-    "name": "New Bugs",
-    "description": "New Bugs",
-    "domain": "Reliability",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
     "hidden": false,
     "bestValue": "0"
   },
@@ -184,17 +109,6 @@
     "bestValue": "0"
   },
   {
-    "key": "vulnerabilities",
-    "name": "New Vulnerabilities",
-    "description": "New Vulnerabilities",
-    "domain": "Security",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
     "key": "security_hotspots",
     "name": "Security Hotspots",
     "description": "Security Hotspots",
@@ -206,31 +120,9 @@
     "bestValue": "0"
   },
   {
-    "key": "security_hotspots",
-    "name": "New Security Hotspots",
-    "description": "New Security Hotspots",
-    "domain": "SecurityReview",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
     "key": "sqale_index",
     "name": "Technical Debt",
     "description": "Total effort (in hours) to fix all the issues on the component and therefore to comply to all the requirements.",
-    "domain": "Maintainability",
-    "type": "WORK_DUR",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "0"
-  },
-  {
-    "key": "technical_debt",
-    "name": "Added Technical Debt",
-    "description": "Added technical debt",
     "domain": "Maintainability",
     "type": "WORK_DUR",
     "higherValuesAreBetter": false,
@@ -251,33 +143,9 @@
     "worstValue": "5.0"
   },
   {
-    "key": "maintainability_rating",
-    "name": "Maintainability Rating on New Code",
-    "description": "Maintainability rating on new code",
-    "domain": "Maintainability",
-    "type": "RATING",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "1.0",
-    "worstValue": "5.0"
-  },
-  {
     "key": "reliability_rating",
     "name": "Reliability Rating",
     "description": "Reliability rating",
-    "domain": "Reliability",
-    "type": "RATING",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "1.0",
-    "worstValue": "5.0"
-  },
-  {
-    "key": "reliability_rating",
-    "name": "Reliability Rating on New Code",
-    "description": "Reliability rating on new code",
     "domain": "Reliability",
     "type": "RATING",
     "higherValuesAreBetter": false,
@@ -310,32 +178,9 @@
     "worstValue": "0.0"
   },
   {
-    "key": "coverage",
-    "name": "Coverage on New Code",
-    "description": "Coverage of new/changed code",
-    "domain": "Coverage",
-    "type": "PERCENT",
-    "higherValuesAreBetter": true,
-    "qualitative": true,
-    "hidden": false,
-    "decimalScale": 1,
-    "bestValue": "100.0",
-    "worstValue": "0.0"
-  },
-  {
     "key": "lines_to_cover",
     "name": "Lines to Cover",
     "description": "Lines to cover",
-    "domain": "Coverage",
-    "type": "INT",
-    "higherValuesAreBetter": false,
-    "qualitative": false,
-    "hidden": false
-  },
-  {
-    "key": "lines_to_cover",
-    "name": "Lines to Cover on New Code",
-    "description": "Lines to cover on new code",
     "domain": "Coverage",
     "type": "INT",
     "higherValuesAreBetter": false,
@@ -354,18 +199,6 @@
     "bestValue": "0"
   },
   {
-    "key": "security_rating",
-    "name": "Security Rating on New Code",
-    "description": "Security rating on new code",
-    "domain": "Security",
-    "type": "RATING",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "1.0",
-    "worstValue": "5.0"
-  },
-  {
     "key": "security_review_rating",
     "name": "Security Review Rating",
     "description": "Security Review Rating",
@@ -378,34 +211,9 @@
     "worstValue": "5.0"
   },
   {
-    "key": "security_review_rating",
-    "name": "Security Review Rating on New Code",
-    "description": "Security Review Rating on New Code",
-    "domain": "SecurityReview",
-    "type": "RATING",
-    "higherValuesAreBetter": false,
-    "qualitative": true,
-    "hidden": false,
-    "bestValue": "1.0",
-    "worstValue": "5.0"
-  },
-  {
     "key": "security_hotspots_reviewed",
     "name": "Security Hotspots Reviewed",
     "description": "Percentage of Security Hotspots Reviewed",
-    "domain": "SecurityReview",
-    "type": "PERCENT",
-    "higherValuesAreBetter": true,
-    "qualitative": true,
-    "hidden": false,
-    "decimalScale": 1,
-    "bestValue": "100.0",
-    "worstValue": "0.0"
-  },
-  {
-    "key": "security_hotspots_reviewed",
-    "name": "Security Hotspots Reviewed on New Code",
-    "description": "Percentage of Security Hotspots Reviewed on New Code",
     "domain": "SecurityReview",
     "type": "PERCENT",
     "higherValuesAreBetter": true,
