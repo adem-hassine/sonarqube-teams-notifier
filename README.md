@@ -50,3 +50,11 @@ mvn  \
 |               sonar.teams.hook |             TRUE | Microsoft teams incoming webhook |
 
 ![Untitled](assets/token-generate.png)
+
+              
+
+# Plugin Result
+
+This message will be automaticly sent into teams channel related to given webhook 
+
+![Untitled](assets/plugin-result.PNG)
