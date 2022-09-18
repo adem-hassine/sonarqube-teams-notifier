@@ -29,7 +29,7 @@ class TeamsHttpClient {
   /**
    * The URL for the webhook.
    */
-  private URL hook;
+  private final URL hook;
 
   /**
    * The full path of the URL including query string and anchor reference.
@@ -39,13 +39,8 @@ class TeamsHttpClient {
   /**
    * The payload to send with the request.
    */
-  private Payload payload;
+  private final Payload payload;
 
-
-  /**
-   * Whether or not to bypass HTTPS validation.
-   */
-  private boolean bypassHttpsValidation = false;
 
   /**
    * The target host of the webhook.
@@ -57,13 +52,6 @@ class TeamsHttpClient {
    */
   private HttpPost httpPost;
 
-  /**
-   * Constructor.
-   *
-   * @param url     The URL of the webhook.
-   * @param payload The payload to send to the webhook.
-   * @throws MalformedURLException If the URL is malformed.
-   */
   private TeamsHttpClient(String url, Payload payload) throws MalformedURLException {
     this.hook = new URL(url);
     this.payload = payload;
@@ -71,11 +59,6 @@ class TeamsHttpClient {
 
   /**
    * Static pattern constructor.
-   *
-   * @param url     The URL of the webhook.
-   * @param payload The payload to send to the webhook.
-   * @return The TeamsHttpClient
-   * @throws MalformedURLException If the URL is malformed.
    */
   static TeamsHttpClient of(String url, Payload payload) throws MalformedURLException {
     return new TeamsHttpClient(url, payload);
@@ -83,22 +66,17 @@ class TeamsHttpClient {
 
   /**
    * Builds the TeamsHttpClient, preparing it to make the request.
-   *
-   * @return The TeamsHttpClient
-   * @throws UnsupportedEncodingException If the payload is malformed.
    */
   TeamsHttpClient build() throws UnsupportedEncodingException, JsonProcessingException {
     int port = getPort();
     path = getPath();
     target = new HttpHost(hook.getHost(), port, hook.getProtocol());
     httpPost = getHttpPost();
-
     LOG.debug(
       "TeamsHttpClient BUILT"
         + " | Host: " + hook.getHost()
         + " | Port: " + port
         + " | Path: " + path
-        + " | Bypass HTTPS Validation: " + bypassHttpsValidation
     );
     return this;
   }

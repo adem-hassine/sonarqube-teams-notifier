@@ -1,12 +1,10 @@
 package com.proxym.sonarteamsnotifier.extension;
 
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import com.proxym.sonarteamsnotifier.DataProvider;
 import com.proxym.sonarteamsnotifier.calculator.MetricsCalculator;
 import com.proxym.sonarteamsnotifier.constants.Constants;
@@ -16,7 +14,6 @@ import com.proxym.sonarteamsnotifier.metriccall.dto.Color;
 import com.proxym.sonarteamsnotifier.metriccall.dto.MeasureDto;
 import com.proxym.sonarteamsnotifier.metriccall.dto.Type;
 import com.proxym.sonarteamsnotifier.webhook.*;
-import lombok.Getter;
 import org.sonar.api.ce.posttask.Branch;
 import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
 import org.sonar.api.ce.posttask.QualityGate;
@@ -26,12 +23,13 @@ import org.sonar.api.ce.posttask.QualityGate;
  */
 class PayloadBuilder {
 
+    /**
+     * Metrics provided by administration settings.
+     */
     private final String[] metrics;
-    private final Optional<String> authorName;
     /**
      * Logger.
      */
-    @Getter
     private final String token;
 
     /**
@@ -52,41 +50,20 @@ class PayloadBuilder {
     private final String projectId;
 
 
-    /**
-     * Constructor.
-     *
-     * @param analysis      The Project's analysis.
-     * @param baseUrl       The URL for the project.
-     * @param qualityGateOk Whether the overall quality gate status is OK or not.
-     */
-    private PayloadBuilder(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics,  Optional<String> authorName) {
+    private PayloadBuilder(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics) {
         this.analysis = analysis;
         this.baseUrl = baseUrl;
         this.qualityGateOk = qualityGateOk;
         this.token = token;
-        // Round percentages to 2 decimal points.
-        /**
-         * Decimal format for percentages.
-         */
-        DecimalFormat percentageFormat = new DecimalFormat();
-        percentageFormat.setMaximumFractionDigits(2);
         this.projectId = projectId;
         this.metrics = metrics;
-        this.authorName = authorName;
     }
 
     /**
      * Static pattern PayloadBuilder constructor.
-     *
-     * @param analysis      The Project's analysis.
-     * @param baseUrl       The URL for the project.
-     * @param qualityGateOk Whether the overall quality gate status is OK or not.
-     * @return The PayloadBuilder
      */
-    static PayloadBuilder of(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics, Optional<String> authorName
-
-    ) {
-        return new PayloadBuilder(analysis, baseUrl, qualityGateOk, token, projectId, metrics, authorName);
+    static PayloadBuilder of(PostProjectAnalysisTask.ProjectAnalysis analysis, String baseUrl, boolean qualityGateOk, String token, String projectId, String[] metrics) {
+        return new PayloadBuilder(analysis, baseUrl, qualityGateOk, token, projectId, metrics);
     }
 
     /**
@@ -113,8 +90,6 @@ class PayloadBuilder {
 
     /**
      * Appends the header to the message.
-     *
-     * @param message The StringBuilder being used to build the message.
      */
     private void appendHeader(Payload message, String projectName) {
         message.setType(PayloadUtils.MESSAGE_CARD);
@@ -125,12 +100,10 @@ class PayloadBuilder {
 
     /**
      * Appends commit information to the message.
-     *
-     * @param message The StringBuilder being used to build the message.
      */
     private void appendCommit(Payload message, QualityGate qualityGate, Optional<Branch> optionalBranch, String projectName) {
         Section section = new Section();
-        section.setActivityTitle(PayloadUtils.SUMMARY.concat(projectName) + authorName.map(author -> ", Author:" + authorName).orElse(""));
+        section.setActivityTitle(PayloadUtils.SUMMARY.concat(projectName));
         section.setActivitySubtitle(optionalBranch.filter(branch -> branch.getName().isPresent()).map(branch -> String.format(PayloadUtils.BRANCH, branch.getName().get())).orElse("") + String.format(PayloadUtils.STATUS, qualityGate.getStatus().toString()));
         section.setActivityImage(DataProvider.getProperty("LOGO_URL"));
         message.getSections().add(section);
@@ -144,13 +117,13 @@ class PayloadBuilder {
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
         section.setFacts(new ArrayList<>());
-        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT),projectId, String.join(Constants.COMMA, metrics));
-        CalculatorResponse response = MetricsCalculator.calculate(baseUrl,noPageDefinitionUrl,token);
+        String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics));
+        CalculatorResponse response = MetricsCalculator.calculate(baseUrl, noPageDefinitionUrl, token);
         section.getFacts().addAll(response.getMeasures().stream().filter(measure -> !response.isFirstScan() || !measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)).map(measure -> {
             Fact fact = new Fact();
-            if (measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)){
+            if (measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)) {
                 fact.setName("Previous ".concat(measure.getDescription()));
-            }else{
+            } else {
                 fact.setName(measure.getDescription());
             }
             fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
@@ -158,6 +131,9 @@ class PayloadBuilder {
         }).collect(Collectors.toList()));
     }
 
+    /**
+     * Append single metric condition.
+     */
 
     private String appendMetricCondition(boolean firstScan, MeasureDto measureDto) {
         if (measureDto.getType().equals(Type.LEVEL)) {
@@ -168,6 +144,10 @@ class PayloadBuilder {
             return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, Color.BLACK.getCssStyle(), measureDto.getActualValue()) + String.format(PayloadUtils.LAST_COMMIT_DETAILS, measureDto.getColor(), measureDto.getDifference());
         }
     }
+
+    /**
+     * Append show button for webhook message .
+     */
 
     private void appendAction(Payload message) {
         Action action = new Action();

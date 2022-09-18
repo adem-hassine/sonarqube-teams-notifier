@@ -10,18 +10,12 @@ public class Constants {
      * The plugin's category.
      */
     public static final String CATEGORY = "Teams";
-    /**
-     * The plugin's metric list.
-     */
-    public static final String METRICS = "Metrics";
+
     /**
      * The name of the Post Condition property.
      */
     public static final String POST_CONDITIONS = "POST_CONDITIONS";
-    /**
-     * The name of the Show author property.
-     */
-    public static final String SHOW_AUTHOR = "show.author";
+
     /**
      * The plugin's sub category.
      */

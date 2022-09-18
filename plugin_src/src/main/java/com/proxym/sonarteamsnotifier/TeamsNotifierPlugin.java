@@ -38,17 +38,14 @@ public class TeamsNotifierPlugin implements Plugin {
         List<Object> extensions = new ArrayList<>();
         extensions.add(getProperty(Constants.ENABLED, "Enabled",
                 "Is Teams Notifier plugin enabled ?", "true", PropertyType.BOOLEAN));
-        extensions.add(getProperty(Constants.SHOW_AUTHOR, "Show Author",
-                "Post author name with notification",
-                "false", PropertyType.BOOLEAN));
         extensions.add(getSelectProperty(Constants.REPORTS_METRICS, "Available metrics",
                 "Choose metrics in order to be sent within the teams notification?",
                 Arrays.stream(DataProvider.getProperty(Constants.REPORTS_METRICS)
-                        .split(Constants.COMMA)).collect(Collectors.toList()), PropertyType.SINGLE_SELECT_LIST, true));
+                        .split(Constants.COMMA)).collect(Collectors.toList()), true));
         extensions.add(getSelectProperty(Constants.POST_CONDITIONS, "Notification Conditions",
                 "Choose quality gate condition for notification",
                 List.of(Constants.BAD_QUALITY_GATEWAY, Constants.GOOD_QUALITY_GATEWAY,
-                        Constants.ANYWAYS), PropertyType.SINGLE_SELECT_LIST, false));
+                        Constants.ANYWAYS), false));
 
         return extensions;
     }
@@ -59,13 +56,12 @@ public class TeamsNotifierPlugin implements Plugin {
             String name,
             String description,
             List<String> defaultValue,
-            PropertyType type,
             boolean multiSelect
     ) {
         return PropertyDefinition.builder(property)
                 .name(name)
                 .description(description)
-                .type(type)
+                .type(PropertyType.SINGLE_SELECT_LIST)
                 .multiValues(multiSelect)
                 .options(defaultValue)
                 .category(Constants.CATEGORY)
