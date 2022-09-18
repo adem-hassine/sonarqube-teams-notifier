@@ -6,6 +6,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Application properties file provider.
+ */
 public class DataProvider {
   private DataProvider(){}
   protected static final String APPLICATION_PROPERTIES = "application.properties";

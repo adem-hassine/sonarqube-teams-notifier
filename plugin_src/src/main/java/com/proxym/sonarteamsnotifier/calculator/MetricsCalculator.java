@@ -81,7 +81,7 @@ public class MetricsCalculator {
         ).sorted(Comparator.comparing(MeasureDto::getOrder).reversed()).collect(Collectors.toList()));
     }
 
-    public static List<Measure> provideMeasures(String baseUrl, String noPageDefinitionUrl, String token) {
+    private static List<Measure> provideMeasures(String baseUrl, String noPageDefinitionUrl, String token) {
         MeasuresContainer measuresContainer = SonarRequestSender.get(baseUrl, noPageDefinitionUrl + String.format(PayloadUtils.PAGINATION_PARAMS, 0, 0), token);
         Integer total = measuresContainer.getPaging().getTotal();
         List<Measure> measures = new ArrayList<>();
@@ -101,7 +101,7 @@ public class MetricsCalculator {
         return measures;
     }
 
-    public static boolean isNumber(String string) {
+    private static boolean isNumber(String string) {
         return !string.isEmpty() && string.matches(NUMBERS_REGEX);
     }
 

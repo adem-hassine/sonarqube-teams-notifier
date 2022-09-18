@@ -13,6 +13,10 @@ public class SonarRequestSender {
   private SonarRequestSender(){}
 
   private static final Logger LOG = Loggers.get(SonarRequestSender.class);
+
+  /**
+   * To get project scan history with sonarqube http client.
+   */
   public static MeasuresContainer get(String baseUrl, String url, String token) {
     HttpConnector.Builder builder = HttpConnector.newBuilder();
     HttpConnector httpConnector= builder.userAgent("teams-notifier")
