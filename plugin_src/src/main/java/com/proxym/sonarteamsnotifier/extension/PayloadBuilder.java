@@ -4,7 +4,6 @@ package com.proxym.sonarteamsnotifier.extension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import com.proxym.sonarteamsnotifier.DataProvider;
 import com.proxym.sonarteamsnotifier.calculator.MetricsCalculator;
 import com.proxym.sonarteamsnotifier.constants.Constants;
@@ -116,34 +115,49 @@ class PayloadBuilder {
 
     private void appendConditions(Payload message) {
         Section section = message.getSections().get(0);
-        section.setFacts(new ArrayList<>());
         String noPageDefinitionUrl = String.format(DataProvider.getProperty(Constants.MEASURES_ENDPOINT), projectId, String.join(Constants.COMMA, metrics));
         CalculatorResponse response = MetricsCalculator.calculate(baseUrl, noPageDefinitionUrl, token);
-        section.getFacts().addAll(response.getMeasures().stream().filter(measure -> !response.isFirstScan() || !measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)).map(measure -> {
-            Fact fact = new Fact();
+        List<Fact> facts = new ArrayList<>();
+        response.getMeasures().stream().filter(measure -> !response.isFirstScan() || !measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)).forEach(measure -> {
             if (measure.getMetric().equals(PayloadUtils.ALERT_STATUS_METRIC)) {
+                Fact fact = new Fact();
                 fact.setName("Previous ".concat(measure.getDescription()));
+                fact.setValue(appendMetricCondition( measure,true));
+                facts.add(fact);
             } else {
-                fact.setName(measure.getDescription());
+                Fact codeFact = new Fact();
+                codeFact.setName(measure.getDescription());
+                codeFact.setValue(appendMetricCondition(measure,false));
+                Fact differenceFact = new Fact();
+                differenceFact.setName("Previous ".concat(measure.getDescription()));
+                differenceFact.setValue(appendMetricCondition(measure,true));
+                facts.add(codeFact);
+                facts.add(differenceFact);
             }
-            fact.setValue(appendMetricCondition(response.isFirstScan(), measure));
-            return fact;
-        }).collect(Collectors.toList()));
+        });
+        section.setFacts(facts);
+
     }
 
     /**
      * Append single metric condition.
      */
 
-    private String appendMetricCondition(boolean firstScan, MeasureDto measureDto) {
+    private String appendMetricCondition(MeasureDto measureDto,boolean difference) {
+        String result ;
         if (measureDto.getType().equals(Type.LEVEL)) {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getDifference());
-        } else if (firstScan) {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getActualValue());
-        } else {
-            return String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, Color.BLACK.getCssStyle(), measureDto.getActualValue()) + String.format(PayloadUtils.LAST_COMMIT_DETAILS, measureDto.getColor(), measureDto.getDifference());
+            result = String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getDifference());
+        } else{
+            if (difference){
+                result= String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, measureDto.getColor(), measureDto.getDifference());
+            }else{
+                result= String.format(PayloadUtils.HTML_ELEMENT_WITH_COLOR, Color.BLACK.getCssStyle(), measureDto.getActualValue());
+
+            }
         }
+        return result;
     }
+
 
     /**
      * Append show button for webhook message .
