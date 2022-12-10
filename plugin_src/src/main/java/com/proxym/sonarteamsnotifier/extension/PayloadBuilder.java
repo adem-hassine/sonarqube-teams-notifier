@@ -128,11 +128,13 @@ class PayloadBuilder {
                 Fact codeFact = new Fact();
                 codeFact.setName(measure.getDescription());
                 codeFact.setValue(appendMetricCondition(measure,false));
-                Fact differenceFact = new Fact();
-                differenceFact.setName("Previous ".concat(measure.getDescription()));
-                differenceFact.setValue(appendMetricCondition(measure,true));
+                if (!response.isFirstScan()){
+                    Fact differenceFact = new Fact();
+                    differenceFact.setName("Previous ".concat(measure.getDescription()));
+                    differenceFact.setValue(appendMetricCondition(measure,true));
+                    facts.add(differenceFact);
+                }
                 facts.add(codeFact);
-                facts.add(differenceFact);
             }
         });
         section.setFacts(facts);
