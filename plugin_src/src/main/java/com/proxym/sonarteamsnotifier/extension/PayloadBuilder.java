@@ -130,7 +130,7 @@ class PayloadBuilder {
                 codeFact.setValue(appendMetricCondition(measure,false));
                 if (!response.isFirstScan()){
                     Fact differenceFact = new Fact();
-                    differenceFact.setName("Previous ".concat(measure.getDescription()));
+                    differenceFact.setName("New ".concat(measure.getDescription()).concat(" Scan"));
                     differenceFact.setValue(appendMetricCondition(measure,true));
                     facts.add(differenceFact);
                 }
