@@ -1,7 +1,6 @@
-**/.DS_Store
 **/target/
+**/.gitignore/
 **/.sonar/
-/node_modules
 # Eclipse configuration files
 **/.classpath
 **/.settings/

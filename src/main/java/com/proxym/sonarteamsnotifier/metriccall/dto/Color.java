@@ -12,6 +12,6 @@ public enum Color {
         this.cssStyle = cssStyle;
     }
 
-    private String cssStyle;
-    private String reference;
+    private final String cssStyle;
+    private final String reference;
 }
